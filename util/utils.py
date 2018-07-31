@@ -5,6 +5,8 @@ from torchvision import datasets, transforms
 from train import params
 from sklearn.manifold import TSNE
 
+import matplotlib
+matplotlib.use('agg')
 import matplotlib.pyplot as plt
 import numpy as np
 
