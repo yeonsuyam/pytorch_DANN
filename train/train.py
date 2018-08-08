@@ -37,6 +37,8 @@ def train(training_mode, feature_extractor, class_classifier, domain_classifier,
         if training_mode == 'dann':
             # setup hyperparameters
             p = float(batch_idx + start_steps) / total_steps
+            #constant : 0.0 --> 0.0004237287881996288 --> 0.0008474574242418598 --> 0.001271185755968851
+            #--> 0.001694913631223427 --> 0.002118640897849744 --> 0.0025423674036921806
             constant = 2. / (1. + np.exp(-10 * p)) - 1
 
             # prepare the data
@@ -65,18 +67,18 @@ def train(training_mode, feature_extractor, class_classifier, domain_classifier,
                 target_labels = Variable(torch.ones((input2.size()[0])).type(torch.LongTensor))
 
             # compute the output of source domain and target domain
-            src_feature = feature_extractor(input1)
-            tgt_feature = feature_extractor(input2)
+            src_feature = feature_extractor(input1)   #torch.Size([512, 800])
+            tgt_feature = feature_extractor(input2)  #torch.Size([512, 800])
 
             # compute the class loss of src_feature
-            class_preds = class_classifier(src_feature)
-            class_loss = class_criterion(class_preds, label1)
+            class_preds = class_classifier(src_feature)    #torch.Size([512, 10])
+            class_loss = class_criterion(class_preds, label1)    #torch.Size([])
 
             # compute the domain loss of src_feature and target_feature
-            tgt_preds = domain_classifier(tgt_feature, constant)
-            src_preds = domain_classifier(src_feature, constant)
-            tgt_loss = domain_criterion(tgt_preds, target_labels)
-            src_loss = domain_criterion(src_preds, source_labels)
+            tgt_preds = domain_classifier(tgt_feature, constant)    #torch.Size([512, 2])
+            src_preds = domain_classifier(src_feature, constant)    #torch.Size([512, 2])
+            tgt_loss = domain_criterion(tgt_preds, target_labels)    #torch.Size([])
+            src_loss = domain_criterion(src_preds, source_labels)    #torch.Size([])
             domain_loss = tgt_loss + src_loss
 
             loss = class_loss + domain_loss
@@ -90,6 +92,10 @@ def train(training_mode, feature_extractor, class_classifier, domain_classifier,
                     100. * batch_idx / len(target_dataloader), loss.item(), class_loss.item(),
                     domain_loss.item()
                 ))
+
+                print(batch_idx)
+                print(len(input2)) #512
+                print(len(target_dataloader)) #116
 
 
         elif training_mode == 'source':

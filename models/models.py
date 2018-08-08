@@ -33,7 +33,7 @@ class Extractor(nn.Module):
     def forward(self, input):
         input = input.expand(input.data.shape[0], 3, 28, 28)
         x = F.relu(F.max_pool2d(self.bn1(self.conv1(input)), 2))
-        x = F.relu(F.max_pool2d(self.conv2_drop(self.bn2(self.conv2(x))), 2))
+        x = F.relu(F.max_pool2d(self.conv2_drop(self.bn2(self.conv2(x))), 2)) #torch.Size([512, 50, 4, 4])
         x = x.view(-1, 50 * 4 * 4)
 
         return x
@@ -42,7 +42,7 @@ class Class_classifier(nn.Module):
 
     def __init__(self):
         super(Class_classifier, self).__init__()
-        self.fc1 = nn.Linear(50 * 4 * 4, 100)
+        self.fc1 = nn.Linear(50 * 4 * 4, 100) #torch.Size([512, 100])
         self.bn1 = nn.BatchNorm1d(100)
         self.fc2 = nn.Linear(100, 100)
         self.bn2 = nn.BatchNorm1d(100)

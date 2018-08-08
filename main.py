@@ -76,7 +76,6 @@ def visualizePerformance(feature_extractor, class_classifier, domain_classifier,
 
 def main(args):
     # prepare the source data and target data
-
     src_train_dataloader = utils.get_train_loader('MNIST')
     src_test_dataloader = utils.get_test_loader('MNIST')
     tgt_train_dataloader = utils.get_train_loader('MNIST_M')
@@ -124,7 +123,7 @@ def parse_arguments(argv):
     """Command line parse."""
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--plot', type=bool, default=True, help='plot figures.')
+    parser.add_argument('--plot', type=bool, default=False, help='plot figures.')
 
     parser.add_argument('--training_mode', type=str, default='dann', help='which mode to train the model.')
 
